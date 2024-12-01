@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import Button from "./Button";
-import Search from "./Search"
-
+import Search from "./Search";
 
 const limit = 10;
 
@@ -16,18 +15,17 @@ const CardList = ({ data }) => {
     }
   }, [offset, data]);
 
-  const filterTags = (tagQuery) =>{
-    const filtered = data.filter(product =>{
-      if(!tagQuery){
-        return product
+  const filterTags = (tagQuery) => {
+    const filtered = data.filter((product) => {
+      if (!tagQuery) {
+        return product;
       }
+      return product.tags.some(({ title }) => title === tagQuery);
+    });
 
-      return product.tags.find(({title}) => title === tagQuery)
-    })
-
-    setOffset(0)
-    setProducts(filtered)
-  }
+    setOffset(0); 
+    setProducts(filtered.slice(0, limit)); 
+  };
 
   const handlePrevious = () => {
     setOffset((prevOffset) => Math.max(prevOffset - limit, 0));
@@ -41,7 +39,7 @@ const CardList = ({ data }) => {
 
   return (
     <div className="cf pa2">
-      <Search handleSearch={filterTags}/>
+      <Search handleSearch={filterTags} />
       <div className="mt2 mb2">
         {products && products.length > 0 ? (
           products.map((product) => (
@@ -55,15 +53,14 @@ const CardList = ({ data }) => {
       <div className="flex items-center justify-center pa4">
         <Button
           text="Previous"
-          handleClick={() => setOffset(offset - limit)}
-          disabled={offset === 0}
+          handleClick={handlePrevious}
+          disabled={offset === 0} 
         />
-          
-        
+
         <Button
           text="Next"
-          handleClick={() => setOffset(offset + limit)}
-          disabled={offset + limit >= data.length}
+          handleClick={handleNext}
+          disabled={offset + limit >= data.length} 
         />
       </div>
     </div>
@@ -71,4 +68,3 @@ const CardList = ({ data }) => {
 };
 
 export default CardList;
-
